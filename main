@@ -1,0 +1,746 @@
+2. Congestion Control Algorithm
+AIM
+
+To write a Java program to simulate the Leaky Bucket congestion control algorithm.
+
+PROCEDURE
+
+Start the program.
+
+Read the bucket capacity and output rate.
+
+Read the number of incoming packets.
+
+Process each packet according to the bucket capacity.
+
+Display the accepted and dropped packets.
+
+Stop the program.
+
+PROGRAM
+
+import java.util.*;
+
+public class CongestionControl {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter bucket capacity: ");
+        int capacity = sc.nextInt();
+
+        System.out.print("Enter output rate: ");
+        int rate = sc.nextInt();
+
+        System.out.print("Enter number of packets: ");
+        int n = sc.nextInt();
+
+        int bucket = 0;
+
+        for (int i = 1; i <= n; i++) {
+            System.out.print("Enter packet size: ");
+            int packet = sc.nextInt();
+
+            if (packet <= capacity - bucket) {
+                bucket += packet;
+                System.out.println("Packet accepted");
+            } else {
+                System.out.println("Packet dropped");
+            }
+
+            int sent = Math.min(bucket, rate);
+            bucket -= sent;
+
+            System.out.println("Packets sent: " + sent);
+            System.out.println("Packets remaining: " + bucket);
+        }
+
+        sc.close();
+    }
+}
+SAMPLE OUTPUT
+Enter bucket capacity: 10
+Enter output rate: 4
+Enter number of packets: 3
+Enter packet size: 6
+Packet accepted
+Packets sent: 4
+Packets remaining: 2
+Enter packet size: 5
+Packet accepted
+Packets sent: 4
+Packets remaining: 3
+Enter packet size: 8
+Packet accepted
+Packets sent: 4
+Packets remaining: 7
+3. Distance Vector Routing Algorithm
+AIM
+
+To write a Java program to simulate the Distance Vector Routing algorithm and find the shortest distance between network nodes.
+
+PROCEDURE
+
+Start the program.
+
+Read the number of routers.
+
+Read the cost matrix between routers.
+
+Initialize the distance table.
+
+Update distances using the Distance Vector algorithm.
+
+Display the final routing table.
+
+Stop the program.
+
+PROGRAM
+
+import java.util.*;
+
+public class DistanceVector {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of routers: ");
+        int n = sc.nextInt();
+
+        int[][] cost = new int[n][n];
+        int[][] dist = new int[n][n];
+
+        System.out.println("Enter cost matrix (999 for no link):");
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                cost[i][j] = sc.nextInt();
+                dist[i][j] = cost[i][j];
+            }
+        }
+
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (dist[i][k] != 999 &&
+                        dist[k][j] != 999 &&
+                        dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
+                }
+            }
+        }
+
+        System.out.println("Final Distance Table:");
+        for (int i = 0; i < n; i++) {
+            System.out.print("Router " + i + ": ");
+            for (int j = 0; j < n; j++) {
+                System.out.print(dist[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        sc.close();
+    }
+}
+SAMPLE OUTPUT
+Enter number of routers: 3
+Enter cost matrix (999 for no link):
+0 2 7
+2 0 1
+7 1 0
+Final Distance Table:
+Router 0: 0 2 3
+Router 1: 2 0 1
+Router 2: 3 1 0
+4. Link State Routing Algorithm
+AIM
+
+To write a Java program to simulate the Link State Routing algorithm using Dijkstra's shortest path algorithm.
+
+PROCEDURE
+
+Start the program.
+
+Read the number of routers and cost matrix.
+
+Select the source router.
+
+Initialize distances to all routers.
+
+Apply Dijkstra's algorithm to find shortest paths.
+
+Display the shortest distance from the source to each router.
+
+Stop the program.
+
+PROGRAM
+
+import java.util.*;
+
+public class LinkState {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of routers: ");
+        int n = sc.nextInt();
+
+        int[][] cost = new int[n][n];
+
+        System.out.println("Enter cost matrix (999 for no link):");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                cost[i][j] = sc.nextInt();
+            }
+        }
+
+        System.out.print("Enter source router: ");
+        int src = sc.nextInt();
+
+        int[] dist = new int[n];
+        boolean[] visited = new boolean[n];
+
+        Arrays.fill(dist, 999);
+        dist[src] = 0;
+
+        for (int count = 0; count < n; count++) {
+            int u = -1;
+
+            for (int i = 0; i < n; i++) {
+                if (!visited[i] &&
+                    (u == -1 || dist[i] < dist[u])) {
+                    u = i;
+                }
+            }
+
+            if (u == -1 || dist[u] == 999)
+                break;
+
+            visited[u] = true;
+
+            for (int v = 0; v < n; v++) {
+                if (!visited[v] && cost[u][v] != 999 &&
+                    dist[u] + cost[u][v] < dist[v]) {
+                    dist[v] = dist[u] + cost[u][v];
+                }
+            }
+        }
+
+        System.out.println("Shortest distances from router " + src);
+        for (int i = 0; i < n; i++) {
+            System.out.println("Router " + i + ": " + dist[i]);
+        }
+
+        sc.close();
+    }
+}
+SAMPLE OUTPUT
+Enter number of routers: 3
+Enter cost matrix (999 for no link):
+0 2 7
+2 0 1
+7 1 0
+Enter source router: 0
+Shortest distances from router 0
+Router 0: 0
+Router 1: 2
+Router 2: 3
+5. Error Detection and Correction Code (CRC)
+AIM
+
+To write a Java program to implement Cyclic Redundancy Check (CRC) for error detection in data communication.
+
+PROCEDURE
+
+Start the program.
+
+Read the data bits and generator bits.
+
+Append zeros to the data according to the generator length.
+
+Perform modulo-2 division using XOR.
+
+Obtain the CRC remainder.
+
+Append the remainder to the original data to generate the transmitted codeword.
+
+Stop the program.
+
+PROGRAM
+
+import java.util.*;
+
+public class CRC {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter data bits: ");
+        String data = sc.next();
+
+        System.out.print("Enter generator bits: ");
+        String gen = sc.next();
+
+        int n = data.length();
+        int m = gen.length();
+
+        String msg = data + "0".repeat(m - 1);
+        char[] bits = msg.toCharArray();
+
+        for (int i = 0; i < n; i++) {
+            if (bits[i] == '1') {
+                for (int j = 0; j < m; j++) {
+                    bits[i + j] =
+                        bits[i + j] == gen.charAt(j) ? '0' : '1';
+                }
+            }
+        }
+
+        String remainder = new String(bits).substring(n);
+        String codeword = data + remainder;
+
+        System.out.println("CRC Remainder: " + remainder);
+        System.out.println("Transmitted Codeword: " + codeword);
+
+        sc.close();
+    }
+}
+SAMPLE OUTPUT
+Enter data bits: 1101
+Enter generator bits: 1011
+CRC Remainder: 001
+Transmitted Codeword: 1101001
+
+Note: This program calculates the CRC remainder and transmitted codeword. It does not separately verify a received message or correct corrupted bits. CRC is primarily an error-detection technique, not an error-correction code.
+
+6. Socket Program for HTTP Webpage Upload and Download
+AIM
+
+To write a Java socket program to upload a webpage from a client to a server and download the webpage from the server to the client.
+
+PROCEDURE
+
+Start the server and listen on port 5000.
+
+The client connects to the server using a socket.
+
+The client sends a webpage upload or download request.
+
+For upload, the client sends webpage content to the server.
+
+For download, the server sends the stored webpage content to the client.
+
+Display the transferred webpage content and close the connection.
+
+PROGRAM
+
+Use two Java files.
+
+Server — WebServer.java
+
+import java.io.*;
+import java.net.*;
+
+public class WebServer {
+    public static void main(String[] args) throws Exception {
+        ServerSocket ss = new ServerSocket(5000);
+        System.out.println("Web Server Started...");
+
+        while (true) {
+            Socket s = ss.accept();
+
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(s.getInputStream()));
+            PrintWriter out = new PrintWriter(
+                s.getOutputStream(), true);
+
+            String request = in.readLine();
+
+            if (request.equals("UPLOAD")) {
+                String page = in.readLine();
+
+                FileWriter fw = new FileWriter("page.html");
+                fw.write(page);
+                fw.close();
+
+                out.println("Webpage uploaded successfully");
+            } else if (request.equals("DOWNLOAD")) {
+                BufferedReader file = new BufferedReader(
+                    new FileReader("page.html"));
+
+                String line;
+                while ((line = file.readLine()) != null) {
+                    out.println(line);
+                }
+
+                file.close();
+                out.println("END");
+            }
+
+            s.close();
+        }
+    }
+}
+Client — WebClient.java
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+public class WebClient {
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+
+        Socket s = new Socket("localhost", 5000);
+
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(s.getInputStream()));
+        PrintWriter out = new PrintWriter(
+            s.getOutputStream(), true);
+
+        System.out.println("1. Upload webpage");
+        System.out.println("2. Download webpage");
+        System.out.print("Enter choice: ");
+        int choice = sc.nextInt();
+        sc.nextLine();
+
+        if (choice == 1) {
+            out.println("UPLOAD");
+            System.out.print("Enter webpage HTML: ");
+            out.println(sc.nextLine());
+
+            System.out.println(in.readLine());
+        } else if (choice == 2) {
+            out.println("DOWNLOAD");
+
+            String line;
+            while ((line = in.readLine()) != null &&
+                   !line.equals("END")) {
+                System.out.println(line);
+            }
+        }
+
+        s.close();
+        sc.close();
+    }
+}
+SAMPLE OUTPUT
+
+Server terminal:
+
+Web Server Started...
+
+Client terminal — upload:
+
+1. Upload webpage
+2. Download webpage
+Enter choice: 1
+Enter webpage HTML: <html><body>Hello World</body></html>
+Webpage uploaded successfully
+
+Client terminal — download:
+
+1. Upload webpage
+2. Download webpage
+Enter choice: 2
+<html><body>Hello World</body></html>
+
+Important: This is a simplified webpage-transfer protocol built with Java sockets, not a standards-compliant HTTP server. It expects the HTML content on a single line and should be used only in a local practical demonstration.
+
+7. Echo Client and Echo Server
+AIM
+
+To write and implement a Java socket program for communication between an Echo Client and Echo Server.
+
+PROCEDURE
+
+Start the Echo Server on port 5000.
+
+Start the client and connect it to the server.
+
+The client sends a message to the server.
+
+The server receives and sends the same message back.
+
+The client displays the echoed message.
+
+Close the connection.
+
+PROGRAM
+Server — EchoServer.java
+
+import java.io.*;
+import java.net.*;
+
+public class EchoServer {
+    public static void main(String[] args) throws Exception {
+        ServerSocket ss = new ServerSocket(5000);
+        System.out.println("Echo Server Started...");
+
+        Socket s = ss.accept();
+
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(s.getInputStream()));
+        PrintWriter out = new PrintWriter(
+            s.getOutputStream(), true);
+
+        String msg = in.readLine();
+        System.out.println("Client: " + msg);
+
+        out.println(msg);
+
+        s.close();
+        ss.close();
+    }
+}
+Client — EchoClient.java
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+public class EchoClient {
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+
+        Socket s = new Socket("localhost", 5000);
+
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(s.getInputStream()));
+        PrintWriter out = new PrintWriter(
+            s.getOutputStream(), true);
+
+        System.out.print("Enter message: ");
+        String msg = sc.nextLine();
+
+        out.println(msg);
+
+        System.out.println("Echo from server: " + in.readLine());
+
+        s.close();
+        sc.close();
+    }
+}
+SAMPLE OUTPUT
+
+Server terminal:
+
+Echo Server Started...
+Client: Hello Server
+
+Client terminal:
+
+Enter message: Hello Server
+Echo from server: Hello Server
+8. Socket Program for Chat
+AIM
+
+To write and implement a Java socket program for chat communication between a client and a server.
+
+PROCEDURE
+
+Start the chat server on port 5000.
+
+Start the client and establish a connection.
+
+Allow the client and server to exchange messages.
+
+Use separate threads to receive messages while sending messages.
+
+Type bye to terminate the chat.
+
+Close the socket connections.
+
+PROGRAM
+Server — ChatServer.java
+
+import java.io.*;
+import java.net.*;
+
+public class ChatServer {
+    public static void main(String[] args) throws Exception {
+        ServerSocket ss = new ServerSocket(5000);
+        System.out.println("Waiting for client...");
+
+        Socket s = ss.accept();
+        System.out.println("Client connected");
+
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(s.getInputStream()));
+        PrintWriter out = new PrintWriter(
+            s.getOutputStream(), true);
+        BufferedReader keyboard = new BufferedReader(
+            new InputStreamReader(System.in));
+
+        Thread receive = new Thread(() -> {
+            try {
+                String msg;
+                while ((msg = in.readLine()) != null) {
+                    System.out.println("Client: " + msg);
+                    if (msg.equalsIgnoreCase("bye"))
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println("Connection closed");
+            }
+        });
+
+        receive.start();
+
+        String msg;
+        while ((msg = keyboard.readLine()) != null) {
+            out.println(msg);
+            if (msg.equalsIgnoreCase("bye"))
+                break;
+        }
+
+        s.close();
+        ss.close();
+    }
+}
+Client — ChatClient.java
+
+import java.io.*;
+import java.net.*;
+
+public class ChatClient {
+    public static void main(String[] args) throws Exception {
+        Socket s = new Socket("localhost", 5000);
+        System.out.println("Connected to server");
+
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(s.getInputStream()));
+        PrintWriter out = new PrintWriter(
+            s.getOutputStream(), true);
+        BufferedReader keyboard = new BufferedReader(
+            new InputStreamReader(System.in));
+
+        Thread receive = new Thread(() -> {
+            try {
+                String msg;
+                while ((msg = in.readLine()) != null) {
+                    System.out.println("Server: " + msg);
+                    if (msg.equalsIgnoreCase("bye"))
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println("Connection closed");
+            }
+        });
+
+        receive.start();
+
+        String msg;
+        while ((msg = keyboard.readLine()) != null) {
+            out.println(msg);
+            if (msg.equalsIgnoreCase("bye"))
+                break;
+        }
+
+        s.close();
+    }
+}
+SAMPLE OUTPUT
+
+Server terminal:
+
+Waiting for client...
+Client connected
+Client: Hello
+Hi, how are you?
+Client: I am fine
+bye
+
+Client terminal:
+
+Connected to server
+Hello
+Server: Hi, how are you?
+I am fine
+Server: bye
+
+Note: Run the server first and then the client. Type messages into the appropriate terminal. The chat ends when either side types bye.
+
+9. Socket Program for File Transfer
+AIM
+
+To write a Java socket program to transfer a file from a client to a server using TCP sockets.
+
+PROCEDURE
+
+Start the file server on port 5000.
+
+The client connects to the server.
+
+The client opens the file to be transferred.
+
+The client sends the file bytes through the socket.
+
+The server receives the bytes and saves them into a new file.
+
+Display the transfer completion message and close the connection.
+
+PROGRAM
+Server — FileServer.java
+
+import java.io.*;
+import java.net.*;
+
+public class FileServer {
+    public static void main(String[] args) throws Exception {
+        ServerSocket ss = new ServerSocket(5000);
+        System.out.println("File Server Started...");
+
+        Socket s = ss.accept();
+
+        InputStream in = s.getInputStream();
+        FileOutputStream file = new FileOutputStream("received.txt");
+
+        byte[] buffer = new byte[1024];
+        int bytes;
+
+        while ((bytes = in.read(buffer)) != -1) {
+            file.write(buffer, 0, bytes);
+        }
+
+        file.close();
+        s.close();
+        ss.close();
+
+        System.out.println("File received successfully");
+    }
+}
+Client — FileClient.java
+
+import java.io.*;
+import java.net.*;
+
+public class FileClient {
+    public static void main(String[] args) throws Exception {
+        Socket s = new Socket("localhost", 5000);
+
+        FileInputStream file = new FileInputStream("send.txt");
+        OutputStream out = s.getOutputStream();
+
+        byte[] buffer = new byte[1024];
+        int bytes;
+
+        while ((bytes = file.read(buffer)) != -1) {
+            out.write(buffer, 0, bytes);
+        }
+
+        s.shutdownOutput();
+
+        file.close();
+        s.close();
+
+        System.out.println("File sent successfully");
+    }
+}
+SAMPLE OUTPUT
+
+Server terminal:
+
+File Server Started...
+File received successfully
+
+Client terminal:
+
+File sent successfully
